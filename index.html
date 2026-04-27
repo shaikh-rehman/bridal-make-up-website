@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makeup Mastery | Universal Skill Development Center</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- ★★★ RAZORPAY SDK ★★★ -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rose: { 50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 500: '#f43f5e', 600: '#e11d48' },
+                        brand: { light: '#ff6b81', DEFAULT: '#ff4b5c', dark: '#e0364a' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; background-color: white; }
+        
+        .bg-dot-pattern {
+            background-image: radial-gradient(circle, #e5e7eb 0.7px, transparent 0.7px);
+            background-size: 20px 20px;
+        }
+
+        .glass {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .glass-dark {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: blobFloat 8s ease-in-out infinite alternate;
+        }
+        @keyframes blobFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -30px) scale(1.1); }
+            100% { transform: translate(-10px, 15px) scale(0.95); }
+        }
+
+        .shimmer-bg {
+            background: linear-gradient(135deg, #fff1f2 0%, #ffffff 40%, #fce7f3 70%, #fff5f7 100%);
+            background-size: 300% 300%;
+            animation: shimmer 6s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff4b5c 0%, #ff6b81 50%, #f43f5e 100%);
+            background-size: 200% 200%;
+            animation: btnGlow 3s ease-in-out infinite;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary:hover, .btn-primary:active {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(255, 75, 92, 0.4);
+        }
+        @keyframes btnGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .red-underline { position: relative; display: inline-block; }
+        .red-underline::after {
+            content: ''; position: absolute; left: 0; bottom: 2px;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, #ff4b5c, #ff6b81);
+            border-radius: 4px;
+        }
+
+        .feature-card {
+            background: white; padding: 1rem 1.25rem; border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.04); display: flex; align-items: center; gap: 0.875rem;
+            font-weight: 600; color: #374151; font-size: 0.875rem; transition: all 0.3s ease;
+        }
+        .feature-card:active { transform: scale(0.98); }
+
+        .course-point {
+            background: white; border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.04); overflow: hidden; cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .course-point:active { transform: scale(0.985); }
+        .course-point.open { box-shadow: 0 4px 20px rgba(255, 75, 92, 0.1); border-color: #fecdd3; }
+        .course-point-header { display: flex; align-items: center; gap: 0.875rem; padding: 0.875rem 1rem; }
+        .course-point-icon { width: 40px; height: 40px; min-width: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        .course-point-title { font-weight: 700; color: #374151; font-size: 0.875rem; flex: 1; }
+        .course-point-arrow { width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); color: #9ca3af; font-size: 0.65rem; }
+        .course-point.open .course-point-arrow { transform: rotate(90deg); background: linear-gradient(135deg, #ff4b5c, #ff6b81); color: white; box-shadow: 0 3px 10px rgba(255, 75, 92, 0.3); }
+        .course-point-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 0 1rem; }
+        .course-point.open .course-point-body { max-height: 120px; padding: 0 1rem 0.875rem 1rem; }
+        .course-point-body-inner { padding: 0.625rem 0.875rem; background: linear-gradient(135deg, #fff8f8, #fff1f2); border-radius: 0.75rem; border-left: 3px solid #ff4b5c; font-size: 0.8rem; color: #6b7280; line-height: 1.5; font-weight: 500; }
+        .course-point-number { width: 22px; height: 22px; min-width: 22px; border-radius: 6px; background: linear-gradient(135deg, #ff4b5c, #ff6b81); color: white; font-size: 0.65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+
+        .support-card {
+            background: white; border-radius: 0.75rem; padding: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; overflow: hidden;
+        }
+        .support-card:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.06); border-color: #fecdd3; }
+        .support-card.active { background: #fff1f2; border-color: #f43f5e; box-shadow: 0 4px 12px rgba(244, 63, 94, 0.15); }
+        .support-header-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .support-left { display: flex; align-items: center; gap: 0.75rem; flex: 1; }
+        .support-circle { width: 36px; height: 36px; min-width: 36px; border-radius: 50%; background: white; border: 2px solid #ffe4e6; color: #f43f5e; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .support-card.active .support-circle { background: linear-gradient(135deg, #ff4b5c, #e11d48); color: white; border-color: transparent; box-shadow: 0 4px 8px rgba(225, 29, 72, 0.3); transform: scale(1.05); }
+        .support-content { flex: 1; }
+        .support-title { font-weight: 700; font-size: 0.8rem; color: #374151; line-height: 1.2; }
+        .support-card.active .support-title { color: #be123c; }
+        .support-arrow { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; color: #d1d5db; transition: transform 0.3s ease, color 0.3s ease; }
+        .support-card.active .support-arrow { color: #e11d48; transform: rotate(90deg); }
+        .support-details { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        .support-card.active .support-details { max-height: 200px; opacity: 1; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed #fecdd3; }
+        .support-bullets { list-style: none; padding: 0; margin: 0; }
+        .support-bullets li { position: relative; padding-left: 1rem; margin-bottom: 0.25rem; font-size: 0.75rem; color: #6b7280; line-height: 1.4; }
+        .support-bullets li::before { content: '•'; color: #f43f5e; position: absolute; left: 0; font-weight: bold; }
+        .support-bullets li:last-child { margin-bottom: 0; }
+
+        .curriculum-card {
+            background: white; border-radius: 1.25rem; padding: 1.25rem;
+            border: 1px solid #f3f4f6; box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .curriculum-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(180deg, #ff4b5c, #ff6b81); border-radius: 0 4px 4px 0;
+        }
+        .curriculum-card:active { transform: scale(0.98); }
+
+        .stat-card {
+            background: white; border-radius: 1.25rem; padding: 1.5rem 1rem; text-align: center;
+            border: 1px solid #f3f4f6; box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: all 0.3s ease;
+        }
+        .stat-icon {
+            width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 0.75rem; font-size: 1.25rem;
+        }
+
+        .mentor-border {
+            position: absolute; inset: -6px; border-radius: 1.5rem;
+            background: linear-gradient(135deg, #ff4b5c, #ff6b81, #f43f5e, #fb7185, #ff4b5c);
+            background-size: 300% 300%; animation: borderRotate 4s linear infinite; z-index: 0;
+        }
+        @keyframes borderRotate { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .contact-card {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 1rem; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease;
+        }
+        .contact-card:active { background: rgba(255,255,255,0.08); }
+
+        .top-offer-bar {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 60;
+            background: linear-gradient(90deg, #0a0a0a 0%, #1a0a0e 50%, #0a0a0a 100%);
+            border-bottom: 1px solid rgba(255,75,92,0.2);
+        }
+        .top-offer-bar .offer-scroll-track { display: flex; animation: offerScroll 18s linear infinite; width: max-content; }
+        @keyframes offerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .top-offer-bar .offer-item {
+            white-space: nowrap; padding: 0 1.5rem; display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.75rem; font-weight: 700; color: white;
+        }
+
+        #floating-container {
+            position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100;
+            transform: translateY(120%); transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        #floating-container.show { transform: translateY(0); }
+        #floating-container.hide-at-bottom { transform: translateY(120%); }
+
+        .floating-offer-line {
+            background: linear-gradient(90deg, #0a0a0a, #1a0a0e, #0a0a0a); padding: 6px 0;
+            text-align: center; border-bottom: 1px solid rgba(255,75,92,0.15);
+        }
+        .floating-action-bar {
+            background: rgba(255,255,255,0.97); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); padding: 10px 16px; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 -8px 32px rgba(0,0,0,0.12);
+            border-top: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .pill {
+            display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem;
+            border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        .price-tag {
+            background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px solid #fecdd3;
+            border-radius: 1rem; padding: 1rem 1.25rem;
+        }
+
+        ::-webkit-scrollbar { width: 0; }
+
+        .form-input-dark {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 0.875rem; padding: 0.875rem 1rem; color: white; outline: none;
+            font-family: inherit; font-size: 0.9rem; transition: all 0.3s ease;
+        }
+        .form-input-dark::placeholder { color: rgba(255,255,255,0.3); }
+        .form-input-dark:focus { border-color: #ff4b5c; box-shadow: 0 0 0 3px rgba(255,75,92,0.15); }
+
+        .mobile-menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .mobile-menu.open { opacity: 1; pointer-events: all; }
+        .mobile-menu-panel {
+            position: absolute; top: 0; right: 0; width: min(300px, 85vw); height: 100%; background: white;
+            padding: 2rem 1.5rem; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .mobile-menu.open .mobile-menu-panel { transform: translateX(0); }
+
+        .pulse-dot {
+            width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .floating-action-bar { padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+            .payment-modal-content { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+        }
+
+        .top-spacer { height: 80px; }
+        @media (min-width: 640px) { .top-spacer { height: 84px; } }
+
+        .audience-card {
+            background: white; border-radius: 1.5rem; padding: 1.5rem; text-align: center;
+            border: 1px solid #f3f4f6; transition: all 0.3s ease;
+        }
+        .audience-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255, 75, 92, 0.1); border-color: #ffe4e6; }
+
+        .pain-point-card {
+            background: #fff5f5; border: 1px solid #fecdd3; border-radius: 1rem;
+            padding: 1rem; display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;
+        }
+        .solution-point-card {
+            background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 1rem;
+            padding: 1rem; display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;
+        }
+
+        .cert-frame {
+            background: white; padding: 0.5rem; border-radius: 1rem;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.25); transform: rotate(-2deg); transition: transform 0.5s ease;
+        }
+        .cert-frame:hover { transform: rotate(0deg) scale(1.02); }
+
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+
+        .dual-cta { display: flex; gap: 0.5rem; }
+        .dual-cta .btn-primary, .dual-cta .btn-pay { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+        .btn-pay {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%); color: white;
+            padding: 0.875rem 1rem; border-radius: 0.75rem; font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.8125rem; font-weight: 700; border: none; cursor: pointer;
+            transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .btn-pay:hover, .btn-pay:active { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+        @media (max-width: 380px) { .dual-cta { flex-direction: column; } }
+
+        /* ========================================= */
+        /* === RAZORPAY PAYMENT MODAL STYLES === */
+        /* ========================================= */
+        .payment-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .payment-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .payment-modal {
+            background: white; width: 92%; max-width: 460px; max-height: 90vh; overflow-y: auto;
+            border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
+        }
+        .payment-overlay.active .payment-modal { transform: translateY(0); }
+
+        .modal-step { display: none; animation: fadeIn 0.4s ease-out; padding: 2rem 1.5rem; }
+        .modal-step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-group { margin-bottom: 0.875rem; position: relative; }
+        .form-label { display: block; font-size: 0.75rem; font-weight: 700; color: #374151; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.03em; }
+        .gateway-input {
+            width: 100%; padding: 0.85rem 1rem; border: 2px solid #e5e7eb; border-radius: 0.75rem;
+            font-size: 0.95rem; outline: none; transition: all 0.3s; background: #f9fafb; font-family: inherit;
+        }
+        .gateway-input:focus { border-color: #e11d48; background: white; box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1); }
+        .gateway-input.error { border-color: #ef4444; background: #fef2f2; }
+        .field-error { font-size: 0.7rem; color: #ef4444; margin-top: 0.25rem; display: none; font-weight: 600; }
+        .field-error.visible { display: block; }
+
+        .razorpay-badge {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.75rem; background: #f0f7ff; border: 1px solid #dbeafe; border-radius: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .razorpay-badge img { height: 20px; }
+        .razorpay-badge span { font-size: 0.75rem; color: #1e40af; font-weight: 700; }
+
+        .secure-badges {
+            display: flex; justify-content: center; gap: 1rem; padding-top: 1rem; border-top: 1px solid #f3f4f6;
+            margin-top: 1rem;
+        }
+        .secure-badge-item {
+            display: flex; align-items: center; gap: 0.35rem; font-size: 0.65rem; color: #9ca3af; font-weight: 600;
+        }
+        .secure-badge-item i { color: #22c55e; font-size: 0.7rem; }
+
+        .amount-display {
+            text-align: center; padding: 1.25rem; background: linear-gradient(135deg, #fff1f2, #fef2f2);
+            border: 1px solid #fecdd3; border-radius: 1rem; margin-bottom: 1.25rem;
+        }
+        .amount-display .label { font-size: 0.7rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; }
+        .amount-display .amount { font-size: 2.5rem; font-weight: 900; color: #e11d48; line-height: 1.1; }
+        .amount-display .original { font-size: 0.9rem; color: #d1d5db; text-decoration: line-through; }
+
+        /* Loading Spinner */
+        .rzp-loader {
+            width: 48px; height: 48px; border: 4px solid #f3f4f6; border-top-color: #e11d48;
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.25rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Receipt Styles */
+        .receipt-box {
+            border: 1px dashed #cbd5e1; background: white; padding: 1.5rem; border-radius: 0.75rem;
+            position: relative; background-image: radial-gradient(#f1f5f9 1px, transparent 1px); background-size: 15px 15px;
+        }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.85rem; }
+        .receipt-total { border-top: 2px dashed #e5e7eb; margin-top: 1rem; padding-top: 0.5rem; display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800; color: #e11d48; }
+        .stamp {
+            position: absolute; top: 10px; right: 10px; border: 2px solid #10b981; color: #10b981;
+            padding: 0.25rem 0.75rem; font-weight: 800; text-transform: uppercase; transform: rotate(-15deg);
+            font-size: 0.7rem; border-radius: 4px; opacity: 0.8;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #receiptContent, #receiptContent * { visibility: visible; }
+            #receiptContent { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; border: none; box-shadow: none; }
+            .no-print { display: none !important; }
+        }
+
+        .btn-loading { position: relative; pointer-events: none; opacity: 0.85; }
+        .btn-loading::after {
+            content: ''; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+
+        .course-option {
+            display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem;
+            border: 2px solid #e5e7eb; border-radius: 0.75rem; cursor: pointer; transition: all 0.25s ease;
+            margin-bottom: 0.5rem; background: #f9fafb;
+        }
+        .course-option:hover { border-color: #fecdd3; background: #fff8f8; }
+        .course-option.selected { border-color: #e11d48; background: #fff1f2; box-shadow: 0 0 0 3px rgba(225,29,72,0.08); }
+        .course-option-radio {
+            width: 20px; height: 20px; min-width: 20px; border-radius: 50%; border: 2px solid #d1d5db;
+            display: flex; align-items: center; justify-content: center; transition: all 0.25s ease;
+        }
+        .course-option.selected .course-option-radio { border-color: #e11d48; background: #e11d48; }
+        .course-option.selected .course-option-radio::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; }
+        .course-option-name { font-weight: 700; font-size: 0.85rem; color: #374151; }
+        .course-option-price { font-weight: 800; font-size: 0.9rem; color: #e11d48; }
+        .course-option-original { font-size: 0.7rem; color: #d1d5db; text-decoration: line-through; margin-left: 0.35rem; }
+
+        .payment-methods {
+            display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin: 1rem 0;
+        }
+        .payment-method-pill {
+            display: flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.75rem;
+            background: #f3f4f6; border-radius: 999px; font-size: 0.7rem; font-weight: 600; color: #6b7280;
+        }
+        .payment-method-pill i { font-size: 0.8rem; }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- ===== RAZORPAY PAYMENT MODAL ===== -->
+    <div id="paymentGateway" class="payment-overlay">
+        <div class="payment-modal">
+            
+            <!-- STEP 1: USER INFORMATION + COURSE SELECTION -->
+            <div id="step1" class="modal-step active">
+                <div class="text-center mb-4">
+                    <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mx-auto mb-3 text-2xl">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h2 class="text-xl font-extrabold text-gray-900">Secure Checkout</h2>
+                    <p class="text-sm text-gray-500 mt-1">Complete your enrollment in 2 minutes</p>
+                </div>
+
+                <!-- Razorpay Trust Badge -->
+                <div class="razorpay-badge">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.557 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-7.076-2.281l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.663-1.305 2.525-3.236 2.525-5.672 0-4.128-2.524-5.851-6.591-7.365z" fill="#0054A6"/></svg>
+                    <span>Secured by Razorpay</span>
+                </div>
+
+                <!-- Course Selection -->
+                <div class="mb-4">
+                    <label class="form-label">Select Your Course</label>
+                    <div id="courseOptions">
+                        <div class="course-option selected" onclick="selectCourse(this, 'Makeup Mastery - Basic', 1999, 4999)">
+                            <div class="flex items-center gap-3">
+                                <div class="course-option-radio"></div>
+                                <div>
+                                    <div class="course-option-name">Makeup Mastery - Basic</div>
+                                    <div class="text-[10px] text-gray-400 font-medium mt-0.5">20+ Lessons • Certificate • Product PDF</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="course-option-price">₹1,999</span>
+                                <span class="course-option-original">₹4,999</span>
+                            </div>
+                        </div>
+                        <div class="course-option" onclick="selectCourse(this, 'Makeup Mastery - Advanced', 3499, 7999)">
+                            <div class="flex items-center gap-3">
+                                <div class="course-option-radio"></div>
+                                <div>
+                                    <div class="course-option-name">Makeup Mastery - Advanced</div>
+                                    <div class="text-[10px] text-gray-400 font-medium mt-0.5">40+ Lessons • Live Q&A • 11 Business Bonuses</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="course-option-price">₹3,499</span>
+                                <span class="course-option-original">₹7,999</span>
+                            </div>
+                        </div>
+                        <div class="course-option" onclick="selectCourse(this, 'Full Combo Bundle (Basic + Advanced)', 4999, 12999)">
+                            <div class="flex items-center gap-3">
+                                <div class="course-option-radio"></div>
+                                <div>
+                                    <div class="course-option-name">Full Combo Bundle</div>
+                                    <div class="text-[10px] text-gray-400 font-medium mt-0.5">Everything Included • Best Value</div>
+                                    <span class="inline-block mt-1 text-[9px] font-extrabold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">BEST VALUE</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="course-option-price">₹4,999</span>
+                                <span class="course-option-original">₹12,999</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Details Form -->
+                <form id="detailsForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" id="userName" class="gateway-input" placeholder="Enter your full name" autocomplete="name">
+                        <div class="field-error" id="nameError">Please enter your full name (min 2 characters)</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" id="userEmail" class="gateway-input" placeholder="example@email.com" autocomplete="email">
+                        <div class="field-error" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mobile Number *</label>
+                        <div class="flex">
+                            <div class="flex items-center px-3 bg-gray-100 border-2 border-r-0 border-gray-200 rounded-l-xl text-sm font-bold text-gray-500">+91</div>
+                            <input type="tel" id="userPhone" class="gateway-input rounded-l-none" placeholder="10-digit number" maxlength="10" autocomplete="tel">
+                        </div>
+                        <div class="field-error" id="phoneError">Please enter a valid 10-digit mobile number</div>
+                    </div>
+
+                    <button type="button" id="payNowBtn" onclick="initiatePayment()" class="btn-primary w-full py-3.5 rounded-xl font-bold text-white mt-3 text-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-shield-halved text-xs"></i>
+                        Pay Securely
+                        <span id="payBtnAmount" class="font-black">₹1,999</span>
+                    </button>
+                </form>
+
+                <!-- Payment Methods -->
+                <div class="payment-methods">
+                    <div class="payment-method-pill"><i class="fas fa-credit-card text-blue-600"></i> Cards</div>
+                    <div class="payment-method-pill"><i class="fas fa-mobile-alt text-purple-600"></i> UPI</div>
+                    <div class="payment-method-pill"><i class="fas fa-university text-gray-600"></i> Net Banking</div>
+                    <div class="payment-method-pill"><i class="fas fa-wallet text-green-600"></i> Wallets</div>
+                </div>
+
+                <!-- Security Badges -->
+                <div class="secure-badges">
+                    <div class="secure-badge-item"><i class="fas fa-lock"></i> SSL Encrypted</div>
+                    <div class="secure-badge-item"><i class="fas fa-shield-halved"></i> PCI DSS</div>
+                    <div class="secure-badge-item"><i class="fas fa-check-circle"></i> 256-bit</div>
+                </div>
+            </div>
+
+            <!-- STEP 2: LOADING / RAZORPAY PROCESSING -->
+            <div id="step2" class="modal-step">
+                <div class="text-center py-6">
+                    <div class="rzp-loader"></div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">Processing Payment</h3>
+                    <p class="text-sm text-gray-500">Opening Razorpay secure checkout...</p>
+                    <p class="text-xs text-gray-400 mt-3">Please do not close this window</p>
+                </div>
+            </div>
+
+            <!-- STEP 3: PAYMENT SUCCESS / RECEIPT -->
+            <div id="step3" class="modal-step">
+                <div class="text-center mb-4">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mx-auto mb-3 text-3xl animate__animated animate__bounceIn">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="text-xl font-extrabold text-gray-900">Payment Successful!</h2>
+                    <p class="text-sm text-gray-500">Your enrollment has been confirmed</p>
+                </div>
+
+                <!-- RECEIPT CARD -->
+                <div id="receiptContent" class="receipt-box mb-4">
+                    <div class="stamp">PAID</div>
+                    <div class="text-center border-b border-dashed border-gray-300 pb-3 mb-3">
+                        <h3 class="font-bold text-gray-800">UNIVERSAL SKILL</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest">Development Center</p>
+                    </div>
+                    
+                    <div class="space-y-1 text-xs">
+                        <div class="receipt-row"><span class="text-gray-500">Receipt ID:</span> <span class="font-bold text-gray-800" id="receiptId">---</span></div>
+                        <div class="receipt-row"><span class="text-gray-500">Razorpay Pay ID:</span> <span class="font-bold text-gray-800 text-right max-w-[55%] truncate" id="receiptPayId">---</span></div>
+                        <div class="receipt-row"><span class="text-gray-500">Date:</span> <span class="font-bold text-gray-800" id="receiptDate">---</span></div>
+                        <div class="receipt-row"><span class="text-gray-500">Customer:</span> <span class="font-bold text-gray-800" id="receiptName">---</span></div>
+                        <div class="receipt-row"><span class="text-gray-500">Mobile:</span> <span class="font-bold text-gray-800" id="receiptPhone">---</span></div>
+                        <div class="receipt-row"><span class="text-gray-500">Email:</span> <span class="font-bold text-gray-800 text-right max-w-[55%] truncate" id="receiptEmail">---</span></div>
+                        <div class="receipt-row"><span class="text-gray-500">Course:</span> <span class="font-bold text-gray-800 text-right max-w-[55%]" id="receiptCourse">---</span></div>
+                        <div class="receipt-row"><span class="text-gray-500">Method:</span> <span class="font-bold text-gray-800" id="receiptMethod">---</span></div>
+                    </div>
+
+                    <div class="receipt-total">
+                        <span>Total Paid</span>
+                        <span id="receiptAmount">₹0</span>
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-4">
+                    <h4 class="font-bold text-sm text-blue-800 mb-2"><i class="fas fa-info-circle mr-1"></i> What's Next?</h4>
+                    <ul class="text-xs text-blue-700 space-y-1.5">
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-blue-500 mt-0.5 text-[10px]"></i> You'll receive a welcome email with course access details</li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-blue-500 mt-0.5 text-[10px]"></i> Join the private WhatsApp group for support</li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-blue-500 mt-0.5 text-[10px]"></i> Certificate will be issued upon course completion</li>
+                    </ul>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-2.5 no-print">
+                    <button id="whatsappBtn" onclick="sendToWhatsapp()" class="w-full py-3.5 rounded-xl font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fab fa-whatsapp text-lg"></i> Send Payment Proof on WhatsApp
+                    </button>
+
+                    <div class="flex gap-2">
+                        <button onclick="window.print()" class="flex-1 py-3 rounded-xl font-bold text-sm border border-gray-300 text-gray-600 hover:bg-gray-50 transition flex items-center justify-center gap-1.5">
+                            <i class="fas fa-download"></i> Save Receipt
+                        </button>
+                        <button onclick="closeGateway()" class="flex-1 py-3 rounded-xl font-bold text-sm bg-gray-900 text-white hover:bg-gray-800 transition flex items-center justify-center gap-1.5">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: PAYMENT FAILED -->
+            <div id="step4" class="modal-step">
+                <div class="text-center py-4">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 mx-auto mb-4 text-3xl animate__animated animate__shakeX">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h2 class="text-xl font-extrabold text-gray-900 mb-1">Payment Failed</h2>
+                    <p class="text-sm text-gray-500 mb-2" id="failureReason">The transaction could not be completed.</p>
+                    <p class="text-xs text-gray-400 mb-6">Your money has not been deducted. Please try again.</p>
+                    
+                    <div class="space-y-2.5">
+                        <button onclick="retryPayment()" class="btn-primary w-full py-3.5 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2">
+                            <i class="fas fa-redo"></i> Retry Payment
+                        </button>
+                        <button onclick="closeGateway()" class="w-full py-3 rounded-xl font-bold text-sm border border-gray-300 text-gray-600 hover:bg-gray-50 transition">
+                            Close & Contact Support
+                        </button>
+                    </div>
+
+                    <div class="mt-5 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                        <p class="text-xs text-gray-500 text-center">Need help? <a href="https://wa.me/918669049971?text=Hi, my payment failed. Please help." target="_blank" class="font-bold text-green-600 hover:underline">Chat with us on WhatsApp</a></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== TOP SCROLLING OFFER BAR ===== -->
+    <div class="top-offer-bar">
+        <div class="overflow-hidden py-1.5">
+            <div class="offer-scroll-track">
+                <div class="offer-item">
+                    <span class="pulse-dot" style="width:6px;height:6px;"></span>
+                    Limited-Time Offer: Entire Course for
+                    <span class="text-rose-400 font-extrabold">₹1999</span>
+                    <span class="line-through text-gray-500">₹4999</span>
+                    <span class="bg-rose-500 text-white text-[9px] px-2 py-0.5 rounded-full font-extrabold ml-1">SAVE 60%</span>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-fire text-orange-400 text-[10px]"></i>
+                    Don't miss out — offer ends soon!
+                    <span class="text-rose-400 font-extrabold ml-1">Enroll Now →</span>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-gift text-rose-400 text-[10px]"></i>
+                    Free Product List PDF + Certificate included
+                    <span class="text-rose-400 font-extrabold ml-1">worth ₹999</span>
+                </div>
+                <div class="offer-item">
+                    <span class="pulse-dot" style="width:6px;height:6px;"></span>
+                    Limited-Time Offer: Entire Course for
+                    <span class="text-rose-400 font-extrabold">₹1999</span>
+                    <span class="line-through text-gray-500">₹4999</span>
+                    <span class="bg-rose-500 text-white text-[9px] px-2 py-0.5 rounded-full font-extrabold ml-1">SAVE 60%</span>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-fire text-orange-400 text-[10px]"></i>
+                    Don't miss out — offer ends soon!
+                    <span class="text-rose-400 font-extrabold ml-1">Enroll Now →</span>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-gift text-rose-400 text-[10px]"></i>
+                    Free Product List PDF + Certificate included
+                    <span class="text-rose-400 font-extrabold ml-1">worth ₹999</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="fixed w-full z-50 glass border-b border-gray-200/50" style="top: 32px;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2.5">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8iCveFVys_s4MATBxQyvBCJYGCoYqtoGiQ&s" alt="Logo" 
+                     class="h-9 w-9 sm:h-11 sm:w-11 object-contain rounded-xl shadow-sm">
+                <div class="leading-none">
+                    <div class="text-base sm:text-lg font-extrabold text-rose-600 tracking-tight">UNIVERSAL SKILL</div>
+                    <div class="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest">Development Center</div>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-5 font-semibold text-sm text-gray-600">
+                <a href="#home" class="hover:text-rose-600 transition">Home</a>
+                <a href="#curriculum" class="hover:text-rose-600 transition">Curriculum</a>
+                <a href="#keypoints" class="hover:text-rose-600 transition">Highlights</a>
+                <a href="#mentor" class="hover:text-rose-600 transition">Mentor</a>
+                <a href="#contact" class="hover:text-rose-600 transition">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="openGateway()" 
+                   class="btn-primary text-white px-4 py-2 rounded-full text-[11px] font-bold shadow-lg hidden sm:inline-flex items-center gap-1.5">
+                    <i class="fas fa-bolt text-[10px]"></i> PAY NOW
+                </button>
+                <button id="menuBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-700">
+                    <i class="fas fa-bars text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-panel">
+            <div class="flex justify-between items-center mb-8">
+                <span class="font-extrabold text-rose-600">Menu</span>
+                <button id="menuClose" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100">
+                    <i class="fas fa-times text-gray-600"></i>
+                </button>
+            </div>
+            <div class="space-y-1">
+                <a href="#home" class="mobile-link block py-3 px-4 rounded-xl font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition">
+                    <i class="fas fa-home w-6 text-gray-400"></i> Home
+                </a>
+                <a href="#curriculum" class="mobile-link block py-3 px-4 rounded-xl font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition">
+                    <i class="fas fa-book w-6 text-gray-400"></i> Curriculum
+                </a>
+                <a href="#keypoints" class="mobile-link block py-3 px-4 rounded-xl font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition">
+                    <i class="fas fa-star w-6 text-gray-400"></i> Highlights
+                </a>
+                <a href="#mentor" class="mobile-link block py-3 px-4 rounded-xl font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition">
+                    <i class="fas fa-user w-6 text-gray-400"></i> Mentor
+                </a>
+                <a href="#contact" class="mobile-link block py-3 px-4 rounded-xl font-semibold text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition">
+                    <i class="fas fa-envelope w-6 text-gray-400"></i> Contact
+                </a>
+            </div>
+            <div class="mt-8 space-y-2.5">
+                <button onclick="closeMobileMenu(); openGateway();"
+                   class="btn-pay w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-bolt"></i> Pay Now
+                </button>
+                <a href="https://wa.me/918669049971" target="_blank"
+                   class="btn-primary block text-center text-white py-3.5 rounded-xl font-bold text-sm shadow-lg">
+                    <i class="fab fa-whatsapp mr-2"></i>Join on WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="top-spacer"></div>
+
+    <!-- ===== HERO ===== -->
+    <section id="home" class="shimmer-bg bg-dot-pattern relative overflow-hidden">
+        <div class="blob w-48 h-48 bg-rose-300 top-10 -right-20" style="animation-delay: 0s;"></div>
+        <div class="blob w-32 h-32 bg-pink-200 bottom-20 -left-16" style="animation-delay: 3s;"></div>
+        <div class="blob w-24 h-24 bg-red-200 top-1/2 right-1/4" style="animation-delay: 5s;"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-14 relative z-10">
+            
+            <div class="text-center mb-8 sm:mb-10" data-aos="fade-down">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight mb-3">
+                    Master Professional<br>
+                    <span class="red-underline">Makeup Artistry</span>
+                </h1>
+                <p class="text-gray-500 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                    From everyday glam to festival-ready looks — learn at your own pace with expert guidance.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 sm:gap-8 items-start">
+                
+                <div class="aspect-[4/3] sm:aspect-video bg-white rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl overflow-hidden relative group border-2 border-rose-100" data-aos="fade-right">
+                    <div class="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50"></div>
+                    <div class="relative z-10 flex flex-col items-center gap-3">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-play text-rose-500 text-xl sm:text-2xl ml-1"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Watch Preview</span>
+                    </div>
+                    <div class="absolute top-3 left-3 pill bg-white/90 text-gray-700 shadow-sm text-[9px]">
+                        <i class="fas fa-video text-rose-500"></i> 20+ Lessons
+                    </div>
+                    <div class="absolute top-3 right-3 pill bg-white/90 text-gray-700 shadow-sm text-[9px]">
+                        <i class="fas fa-clock text-rose-500"></i> 1yr Access
+                    </div>
+                </div>
+
+                <div class="space-y-3" data-aos="fade-left">
+
+                    <div class="mb-1">
+                        <h2 class="text-lg sm:text-xl font-extrabold text-gray-900 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center text-white text-xs shadow-md">
+                                <i class="fas fa-gift"></i>
+                            </span>
+                            Course Me Kya Milega?
+                        </h2>
+                        <p class="text-[11px] text-gray-400 font-medium ml-10 mt-0.5">Click arrow to see details</p>
+                    </div>
+
+                    <div class="course-point" onclick="toggleCoursePoint(this)">
+                        <div class="course-point-header">
+                            <div class="course-point-number">1</div>
+                            <div class="course-point-icon bg-rose-50 text-rose-500"><i class="fas fa-hands"></i></div>
+                            <span class="course-point-title">Practical Training</span>
+                            <div class="course-point-arrow"><i class="fas fa-chevron-right"></i></div>
+                        </div>
+                        <div class="course-point-body"><div class="course-point-body-inner">Haath se practice real tools ke saath</div></div>
+                    </div>
+
+                    <div class="course-point" onclick="toggleCoursePoint(this)">
+                        <div class="course-point-header">
+                            <div class="course-point-number">2</div>
+                            <div class="course-point-icon bg-purple-50 text-purple-500"><i class="fas fa-gem"></i></div>
+                            <span class="course-point-title">Social Media Ads + Reels</span>
+                            <div class="course-point-arrow"><i class="fas fa-chevron-right"></i></div>
+                        </div>
+                        <div class="course-point-body"><div class="course-point-body-inner">Social media ADS and social media handling ka use karke high paying clients tak kis tarah pohoche aur unhe apni service de</div></div>
+                    </div>
+
+                    <div class="course-point" onclick="toggleCoursePoint(this)">
+                        <div class="course-point-header">
+                            <div class="course-point-number">3</div>
+                            <div class="course-point-icon bg-green-50 text-green-500"><i class="fas fa-headset"></i></div>
+                            <span class="course-point-title">Free Guidance</span>
+                            <div class="course-point-arrow"><i class="fas fa-chevron-right"></i></div>
+                        </div>
+                        <div class="course-point-body"><div class="course-point-body-inner">Free counseling + support jab bhi zarurat ho</div></div>
+                    </div>
+
+                    <div class="course-point" onclick="toggleCoursePoint(this)">
+                        <div class="course-point-header">
+                            <div class="course-point-number">4</div>
+                            <div class="course-point-icon bg-amber-50 text-amber-500"><i class="fas fa-certificate"></i></div>
+                            <span class="course-point-title">Certificate</span>
+                            <div class="course-point-arrow"><i class="fas fa-chevron-right"></i></div>
+                        </div>
+                        <div class="course-point-body"><div class="course-point-body-inner">Resume aur profile ke liye verified certificate</div></div>
+                    </div>
+
+                    <div class="price-tag flex items-end gap-3 mt-2">
+                        <div>
+                            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Enroll for</div>
+                            <span class="text-3xl sm:text-4xl font-black text-rose-600 leading-none">₹1999</span>
+                        </div>
+                        <div class="pb-0.5">
+                            <span class="text-base text-gray-400 line-through">₹4,999</span>
+                            <div class="pill bg-green-100 text-green-700 text-[9px] mt-0.5"><i class="fas fa-tag"></i> Save 60%</div>
+                        </div>
+                    </div>
+
+                    <div class="dual-cta pt-1">
+                        <a href="https://wa.me/918669049971" target="_blank" class="btn-primary text-white px-4 py-3.5 rounded-xl font-bold text-sm shadow-lg">
+                            <i class="fab fa-whatsapp text-lg"></i> WhatsApp
+                        </a>
+                        <button onclick="openGateway()" class="btn-pay py-3.5 rounded-xl font-bold text-sm">
+                            <i class="fas fa-bolt"></i> Pay Now
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-4 pt-2 text-[10px] text-gray-400 font-medium">
+                        <span><i class="fas fa-shield-halved text-green-500 mr-1"></i> Razorpay Secure</span>
+                        <span><i class="fas fa-rotate-left text-blue-500 mr-1"></i> Money-Back Guarantee</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+            <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="w-full h-8 sm:h-12">
+                <path d="M0,30 C300,60 900,0 1200,30 L1200,60 L0,60 Z" fill="white"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ===== BUSINESS SUPPORT SECTION ===== -->
+    <section class="py-14 sm:py-20 bg-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-rose-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="text-center mb-8 sm:mb-12" data-aos="fade-up">
+                <div class="pill bg-rose-100 text-rose-600 mx-auto mb-3 w-fit"><i class="fas fa-briefcase text-[8px]"></i> Business Support</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Course ke saath,<span class="text-rose-600">Free Bonus!</span></h2>
+                <p class="text-gray-500 text-sm max-w-md mx-auto">Everything you need to start, run, and scale your makeup business.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="0"><div class="support-header-row"><div class="support-left"><div class="support-circle">01</div><h4 class="support-title">Business Loan Guidance</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Step-by-step loan application process.</li><li>Government & Private loan options.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="50"><div class="support-header-row"><div class="support-left"><div class="support-circle">02</div><h4 class="support-title">Beauty Boss Guide Book</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Exclusive E-book for strategy.</li><li>Pricing, client handling & management.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="100"><div class="support-header-row"><div class="support-left"><div class="support-circle">03</div><h4 class="support-title">Profit Calculator</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Excel sheet for exact margins.</li><li>Track product costs & service profits.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="150"><div class="support-header-row"><div class="support-left"><div class="support-circle">04</div><h4 class="support-title">Certificate System</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Guide to industry-recognized certs.</li><li>Boost your credibility instantly.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="200"><div class="support-header-row"><div class="support-left"><div class="support-circle">05</div><h4 class="support-title">Booking System</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Digital tools for appointments.</li><li>Manage clients without chaos.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="250"><div class="support-header-row"><div class="support-left"><div class="support-circle">06</div><h4 class="support-title">Marketing Kit</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Ready-to-use social media posts.</li><li>Story templates & ad creatives.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="300"><div class="support-header-row"><div class="support-left"><div class="support-circle">07</div><h4 class="support-title">Sourcing Guide</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Secret list of wholesalers.</li><li>Buy makeup products at lowest cost.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="350"><div class="support-header-row"><div class="support-left"><div class="support-circle">08</div><h4 class="support-title">Staff Management</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>HR templates for hiring.</li><li>Train & manage salon assistants.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="400"><div class="support-header-row"><div class="support-left"><div class="support-circle">09</div><h4 class="support-title">Legal Compliance</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Checklist of licenses.</li><li>Registrations & legal docs required.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="450"><div class="support-header-row"><div class="support-left"><div class="support-circle">10</div><h4 class="support-title">Taxation Guide</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Simplified GST registration.</li><li>Filing returns for freelancers.</li></ul></div></div>
+                <div class="support-card" onclick="toggleSupport(this)" data-aos="fade-up" data-aos-delay="500"><div class="support-header-row"><div class="support-left"><div class="support-circle">11</div><h4 class="support-title">Branding Kit</h4></div><i class="fas fa-chevron-right support-arrow text-[10px]"></i></div><div class="support-details"><ul class="support-bullets"><li>Logo ideas & color palettes.</li><li>Brand identity templates.</li></ul></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHO SHOULD JOIN -->
+    <section class="py-14 sm:py-20 bg-gray-50 bg-dot-pattern">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <div class="pill bg-blue-100 text-blue-600 mx-auto mb-3 w-fit"><i class="fas fa-users text-[8px]"></i> Target Audience</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Who Should <span class="text-blue-600">Join?</span></h2>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="audience-card"><div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl"><i class="fas fa-briefcase"></i></div><h3 class="font-bold text-gray-800 mb-1">Working Professionals</h3><p class="text-xs text-gray-500">Look polished & camera-ready for meetings & events.</p></div>
+                <div class="audience-card"><div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl"><i class="fas fa-graduation-cap"></i></div><h3 class="font-bold text-gray-800 mb-1">College Students</h3><p class="text-xs text-gray-500">Learn quick, budget-friendly looks for daily wear.</p></div>
+                <div class="audience-card"><div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl"><i class="fas fa-heart"></i></div><h3 class="font-bold text-gray-800 mb-1">Makeup Beginners</h3><p class="text-xs text-gray-500">Zero to hero: Start from the very basics.</p></div>
+                <div class="audience-card"><div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl"><i class="fas fa-palette"></i></div><h3 class="font-bold text-gray-800 mb-1">Aspiring Artists</h3><p class="text-xs text-gray-500">Master techniques to start your freelance career.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAIN POINTS -->
+    <section class="py-14 sm:py-20 bg-white relative overflow-hidden">
+        <div class="blob w-40 h-40 bg-red-100 top-0 left-0 opacity-40"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <div class="pill bg-rose-100 text-rose-600 mx-auto mb-3 w-fit"><i class="fas fa-exclamation-circle text-[8px]"></i> Struggles</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">This Course is Perfect for You <br>If You...</h2>
+            </div>
+            <div class="max-w-2xl mx-auto space-y-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="pain-point-card"><div class="min-w-[30px] h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500"><i class="fas fa-times"></i></div><div><h4 class="font-bold text-gray-800 text-sm">Makeup feels confusing and difficult</h4><p class="text-xs text-gray-500 mt-0.5">You watch tutorials but can't seem to replicate the look.</p></div></div>
+                <div class="pain-point-card"><div class="min-w-[30px] h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500"><i class="fas fa-times"></i></div><div><h4 class="font-bold text-gray-800 text-sm">You don't know your face shape</h4><p class="text-xs text-gray-500 mt-0.5">Contouring and highlighting never look right on your features.</p></div></div>
+                <div class="pain-point-card"><div class="min-w-[30px] h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-500"><i class="fas fa-times"></i></div><div><h4 class="font-bold text-gray-800 text-sm">Makeup looks cakey or patchy</h4><p class="text-xs text-gray-500 mt-0.5">Your foundation settles into fine lines or disappears by noon.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUTIONS -->
+    <section class="py-14 sm:py-20 bg-gray-50 bg-dot-pattern relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <div class="pill bg-green-100 text-green-600 mx-auto mb-3 w-fit"><i class="fas fa-check-circle text-[8px]"></i> The Solution</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">How This Course <span class="text-green-600">Fixes It</span></h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="solution-point-card"><div class="min-w-[30px] h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600"><i class="fas fa-check"></i></div><div><h4 class="font-bold text-gray-800 text-sm">Step-by-Step Techniques</h4><p class="text-xs text-gray-500 mt-0.5">No more guessing. We break down complex looks into easy, bite-sized steps.</p></div></div>
+                <div class="solution-point-card"><div class="min-w-[30px] h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600"><i class="fas fa-check"></i></div><div><h4 class="font-bold text-gray-800 text-sm">Analyze Your Skin Type</h4><p class="text-xs text-gray-500 mt-0.5">Learn product selection tailored specifically for oily, dry, or combination skin.</p></div></div>
+                <div class="solution-point-card"><div class="min-w-[30px] h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600"><i class="fas fa-check"></i></div><div><h4 class="font-bold text-gray-800 text-sm">Face Shape Mapping</h4><p class="text-xs text-gray-500 mt-0.5">Master contouring and blush placement for round, oval, square, or heart faces.</p></div></div>
+                <div class="solution-point-card"><div class="min-w-[30px] h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600"><i class="fas fa-check"></i></div><div><h4 class="font-bold text-gray-800 text-sm">Eye Shape Mastery</h4><p class="text-xs text-gray-500 mt-0.5">Winged liner and eyeshadow techniques adapted for hooded, monolid, or deep set eyes.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURRICULUM -->
+    <section id="curriculum" class="py-14 sm:py-20 bg-gray-50 bg-dot-pattern">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-10 sm:mb-14" data-aos="fade-up">
+                <div class="pill bg-rose-100 text-rose-600 mx-auto mb-3 w-fit"><i class="fas fa-book-open text-[8px]"></i> What You'll Learn</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Course <span class="red-underline">Curriculum</span></h2>
+                <p class="text-gray-400 text-sm max-w-sm mx-auto">Complete roadmap from basic skin prep to advanced glam looks.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 sm:gap-5">
+                <div class="curriculum-card" data-aos="fade-up" data-aos-delay="0"><div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 min-w-[40px] rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center font-black text-sm">01</div><div><h3 class="font-bold text-base sm:text-lg">Skin Science & Prep</h3><span class="text-[10px] font-semibold text-gray-400 uppercase">Foundation Module</span></div></div><ul class="text-sm text-gray-500 space-y-1.5 pl-[52px]"><li class="flex items-start gap-2"><i class="fas fa-check-circle text-rose-400 text-xs mt-1"></i> Understanding Skin Undertones</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-rose-400 text-xs mt-1"></i> CTMP Routine for Longevity</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-rose-400 text-xs mt-1"></i> Choosing Primers for your Skin</li></ul></div>
+                <div class="curriculum-card" data-aos="fade-up" data-aos-delay="100"><div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 min-w-[40px] rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center font-black text-sm">02</div><div><h3 class="font-bold text-base sm:text-lg">The Flawless Base</h3><span class="text-[10px] font-semibold text-gray-400 uppercase">Core Module</span></div></div><ul class="text-sm text-gray-500 space-y-1.5 pl-[52px]"><li class="flex items-start gap-2"><i class="fas fa-check-circle text-blue-400 text-xs mt-1"></i> Non-cakey Foundation Application</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-blue-400 text-xs mt-1"></i> Color Correction for Dark Circles</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-blue-400 text-xs mt-1"></i> Professional Concealing & Baking</li></ul></div>
+                <div class="curriculum-card" data-aos="fade-up" data-aos-delay="200"><div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 min-w-[40px] rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center font-black text-sm">03</div><div><h3 class="font-bold text-base sm:text-lg">Eye Artistry</h3><span class="text-[10px] font-semibold text-gray-400 uppercase">Advanced Module</span></div></div><ul class="text-sm text-gray-500 space-y-1.5 pl-[52px]"><li class="flex items-start gap-2"><i class="fas fa-check-circle text-purple-400 text-xs mt-1"></i> Daily Office & College Looks</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-purple-400 text-xs mt-1"></i> Perfect Winged Eyeliner Guide</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-purple-400 text-xs mt-1"></i> Festive Smokey Eye Techniques</li></ul></div>
+                <div class="curriculum-card" data-aos="fade-up" data-aos-delay="300"><div class="flex items-start gap-3 mb-3"><div class="w-10 h-10 min-w-[40px] rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center font-black text-sm">04</div><div><h3 class="font-bold text-base sm:text-lg">Face Sculpting</h3><span class="text-[10px] font-semibold text-gray-400 uppercase">Pro Module</span></div></div><ul class="text-sm text-gray-500 space-y-1.5 pl-[52px]"><li class="flex items-start gap-2"><i class="fas fa-check-circle text-amber-400 text-xs mt-1"></i> Contouring for your Face Shape</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-amber-400 text-xs mt-1"></i> 3D Highlighting & Blushing</li><li class="flex items-start gap-2"><i class="fas fa-check-circle text-amber-400 text-xs mt-1"></i> Lipstick Hacks for All-Day Wear</li></ul></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY THIS COURSE -->
+    <section id="keypoints" class="py-14 sm:py-20 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div class="blob w-40 h-40 bg-rose-600 -top-10 -right-10 opacity-10"></div>
+        <div class="blob w-32 h-32 bg-pink-600 bottom-0 left-10 opacity-10" style="animation-delay: 2s;"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="text-center mb-10 sm:mb-14" data-aos="fade-up">
+                <div class="pill bg-white/10 text-rose-400 mx-auto mb-3 w-fit border border-white/5"><i class="fas fa-gem text-[8px]"></i> What Makes Us Different</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Why This <span class="text-rose-500">Course?</span></h2>
+            </div>
+            <div class="grid grid-cols-2 gap-4 sm:gap-6">
+                <div class="stat-card bg-white/5 border-white/5" data-aos="zoom-in" data-aos-delay="0"><div class="stat-icon bg-rose-500/15 text-rose-400"><i class="fas fa-infinity"></i></div><h4 class="font-bold text-sm mb-1">Lifetime Access</h4><p class="text-[11px] text-gray-500 leading-relaxed">Watch anytime, anywhere, forever</p></div>
+                <div class="stat-card bg-white/5 border-white/5" data-aos="zoom-in" data-aos-delay="100"><div class="stat-icon bg-blue-500/15 text-blue-400"><i class="fas fa-certificate"></i></div><h4 class="font-bold text-sm mb-1">Certificate</h4><p class="text-[11px] text-gray-500 leading-relaxed">Verified completion certificate</p></div>
+                <div class="stat-card bg-white/5 border-white/5" data-aos="zoom-in" data-aos-delay="200"><div class="stat-icon bg-green-500/15 text-green-400"><i class="fas fa-shopping-bag"></i></div><h4 class="font-bold text-sm mb-1">Product List PDF</h4><p class="text-[11px] text-gray-500 leading-relaxed">Curated budget-friendly list</p></div>
+                <div class="stat-card bg-white/5 border-white/5" data-aos="zoom-in" data-aos-delay="300"><div class="stat-icon bg-purple-500/15 text-purple-400"><i class="fas fa-headset"></i></div><h4 class="font-bold text-sm mb-1">Expert Support</h4><p class="text-[11px] text-gray-500 leading-relaxed">Direct mentor access on WhatsApp</p></div>
+            </div>
+            <div class="mt-10 sm:mt-14 text-center" data-aos="fade-up">
+                <div class="dual-cta max-w-sm mx-auto">
+                    <a href="https://wa.me/918669049971" target="_blank" class="btn-primary text-white px-6 py-4 rounded-2xl font-bold text-sm shadow-2xl flex items-center justify-center gap-2"><i class="fab fa-whatsapp text-lg"></i> WhatsApp</a>
+                    <button onclick="openGateway()" class="btn-pay py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2"><i class="fas fa-bolt"></i> Pay Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CERTIFICATE -->
+    <section class="py-14 sm:py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <div class="pill bg-amber-100 text-amber-700 mx-auto mb-3 w-fit" data-aos="fade-up"><i class="fas fa-award text-[8px]"></i> Certification</div>
+            <h2 class="text-2xl sm:text-4xl font-extrabold mb-6" data-aos="fade-up">Get Industry Recognized <span class="red-underline">Certification</span></h2>
+            <div class="relative max-w-2xl mx-auto mb-8" data-aos="zoom-in">
+                <div class="cert-frame">
+                    <img src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e?q=80&w=1000&auto=format&fit=crop" alt="Certificate Sample" class="w-full h-auto rounded-lg object-cover">
+                </div>
+                <div class="absolute -bottom-4 -right-4 sm:bottom-6 sm:-right-6 bg-rose-600 text-white p-4 rounded-xl shadow-xl rotate-12">
+                    <div class="text-[10px] font-bold uppercase tracking-widest">Upon Completion</div>
+                    <div class="text-lg font-black">Verified</div>
+                </div>
+            </div>
+            <p class="text-gray-500 text-sm max-w-lg mx-auto" data-aos="fade-up">Receive a verified Universal Skill Development Center certificate upon successfully completing the course.</p>
+        </div>
+    </section>
+
+    <!-- MENTOR -->
+    <section id="mentor" class="py-14 sm:py-20 bg-gray-50 bg-dot-pattern relative overflow-hidden">
+        <div class="blob w-36 h-36 bg-rose-200 top-20 right-0 opacity-30"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="flex flex-col md:flex-row items-center gap-10 sm:gap-16">
+                <div class="md:w-5/12 w-full max-w-[280px] sm:max-w-none relative" data-aos="zoom-in">
+                    <div class="mentor-border"></div>
+                    <img src="https://images.unsplash.com/photo-1595475243692-392820991677?q=80&w=1000&auto=format&fit=crop" class="rounded-[1.25rem] shadow-2xl w-full relative z-10 aspect-[3/4] object-cover" alt="Mentor Lavisha">
+                    <div class="absolute -bottom-3 -right-3 sm:bottom-4 sm:-right-4 z-20 bg-white rounded-2xl shadow-xl p-3 border border-gray-100">
+                        <div class="flex items-center gap-2"><div class="w-8 h-8 bg-rose-50 rounded-lg flex items-center justify-center"><i class="fas fa-award text-rose-500 text-sm"></i></div><div><div class="text-[10px] text-gray-400 font-semibold">Certified</div><div class="text-xs font-bold">Master Artist</div></div></div>
+                    </div>
+                </div>
+                <div class="md:w-7/12 text-center md:text-left" data-aos="fade-left">
+                    <div class="pill bg-rose-100 text-rose-600 mx-auto md:mx-0 mb-3 w-fit"><i class="fas fa-chalkboard-user text-[8px]"></i> Lead Educator</div>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold mb-4">Meet <span class="red-underline">Lavisha</span></h2>
+                    <p class="text-gray-500 text-sm sm:text-base leading-relaxed mb-6 max-w-lg mx-auto md:mx-0">With <strong class="text-gray-800">10+ years of professional experience</strong>, Lavisha has trained over 15,000 students globally.</p>
+                    <div class="space-y-2.5 mb-8 max-w-sm mx-auto md:mx-0">
+                        <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm"><i class="fas fa-check-circle text-rose-500"></i><span class="text-sm font-semibold text-gray-700">Master Artist Certification</span></div>
+                        <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm"><i class="fas fa-check-circle text-rose-500"></i><span class="text-sm font-semibold text-gray-700">Former Celebrity Stylist</span></div>
+                        <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm"><i class="fas fa-check-circle text-rose-500"></i><span class="text-sm font-semibold text-gray-700">Personal Mentorship Approach</span></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 max-w-xs mx-auto md:mx-0">
+                        <div class="bg-gradient-to-br from-rose-50 to-pink-50 p-4 rounded-2xl border border-rose-100 text-center"><span class="block text-2xl font-black text-rose-600">15k+</span><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Students</span></div>
+                        <div class="bg-gradient-to-br from-amber-50 to-yellow-50 p-4 rounded-2xl border border-amber-100 text-center"><span class="block text-2xl font-black text-amber-600">4.9/5</span><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Rating</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="py-14 sm:py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <div class="pill bg-rose-100 text-rose-600 mx-auto mb-3 w-fit"><i class="fas fa-heart text-[8px]"></i> Student Love</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">What Students <span class="red-underline">Say</span></h2>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-4">
+                <div class="bg-gray-50 p-5 rounded-2xl shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="0"><div class="flex gap-0.5 mb-3"><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i></div><p class="text-sm text-gray-600 leading-relaxed mb-4">"I went from zero skills to doing my own bridal makeup. Lavisha makes everything so simple!"</p><div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 font-bold text-xs">P</div><div><div class="text-xs font-bold">Priya Sharma</div><div class="text-[10px] text-gray-400">Delhi</div></div></div></div>
+                <div class="bg-gray-50 p-5 rounded-2xl shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="100"><div class="flex gap-0.5 mb-3"><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i></div><p class="text-sm text-gray-600 leading-relaxed mb-4">"The product list PDF saved me so much money. Best investment I've made for myself this year."</p><div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">A</div><div><div class="text-xs font-bold">Ananya Patel</div><div class="text-[10px] text-gray-400">Mumbai</div></div></div></div>
+                <div class="bg-gray-50 p-5 rounded-2xl shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="200"><div class="flex gap-0.5 mb-3"><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i><i class="fas fa-star text-amber-400 text-xs"></i></div><p class="text-sm text-gray-600 leading-relaxed mb-4">"Live Q&A sessions are a game changer. Lavisha literally replies to every doubt. Worth every penny!"</p><div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">R</div><div><div class="text-xs font-bold">Riya Kapoor</div><div class="text-[10px] text-gray-400">Bangalore</div></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-14 sm:py-20 bg-gray-50 bg-dot-pattern">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <div class="pill bg-rose-100 text-rose-600 mx-auto mb-3 w-fit"><i class="fas fa-question-circle text-[8px]"></i> Common Questions</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Frequently Asked <span class="red-underline">Questions</span></h2>
+            </div>
+            <div class="space-y-4" data-aos="fade-up" data-aos-delay="100">
+                <details class="group bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"><summary class="flex justify-between items-center font-semibold cursor-pointer list-none p-4 text-gray-800 hover:bg-gray-50 transition"><span>Is this course online or offline?</span><span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-rose-500 text-sm"></i></span></summary><div class="text-gray-600 text-sm px-4 pb-4 border-t border-gray-50 pt-3 leading-relaxed">This is a <strong>100% Online Pre-recorded Course</strong>. You can watch the lessons from the comfort of your home at any time.</div></details>
+                <details class="group bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"><summary class="flex justify-between items-center font-semibold cursor-pointer list-none p-4 text-gray-800 hover:bg-gray-50 transition"><span>How long do I have access to the course?</span><span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-rose-500 text-sm"></i></span></summary><div class="text-gray-600 text-sm px-4 pb-4 border-t border-gray-50 pt-3 leading-relaxed">You get <strong>Lifetime Access</strong> to the course material, including any future updates or bonus lessons added.</div></details>
+                <details class="group bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"><summary class="flex justify-between items-center font-semibold cursor-pointer list-none p-4 text-gray-800 hover:bg-gray-50 transition"><span>Do I need expensive makeup products?</span><span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-rose-500 text-sm"></i></span></summary><div class="text-gray-600 text-sm px-4 pb-4 border-t border-gray-50 pt-3 leading-relaxed">Not at all! We provide a <strong>Product List PDF</strong> that includes both high-end and affordable drugstore alternatives.</div></details>
+                <details class="group bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"><summary class="flex justify-between items-center font-semibold cursor-pointer list-none p-4 text-gray-800 hover:bg-gray-50 transition"><span>Is there a refund policy?</span><span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-rose-500 text-sm"></i></span></summary><div class="text-gray-600 text-sm px-4 pb-4 border-t border-gray-50 pt-3 leading-relaxed">Yes, we offer a <strong>7-Day Money-Back Guarantee</strong>. If you feel the course isn't right for you, reach out within 7 days.</div></details>
+                <details class="group bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"><summary class="flex justify-between items-center font-semibold cursor-pointer list-none p-4 text-gray-800 hover:bg-gray-50 transition"><span>How do I make the payment?</span><span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-rose-500 text-sm"></i></span></summary><div class="text-gray-600 text-sm px-4 pb-4 border-t border-gray-50 pt-3 leading-relaxed">We accept payments via <strong>Razorpay</strong> — you can pay using UPI, Credit/Debit Cards, Net Banking, or Wallets. All transactions are 100% secure and encrypted.</div></details>
+                <details class="group bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"><summary class="flex justify-between items-center font-semibold cursor-pointer list-none p-4 text-gray-800 hover:bg-gray-50 transition"><span>Will I receive a certificate?</span><span class="transition group-open:rotate-180"><i class="fas fa-chevron-down text-rose-500 text-sm"></i></span></summary><div class="text-gray-600 text-sm px-4 pb-4 border-t border-gray-50 pt-3 leading-relaxed">Yes, upon successful completion, you will receive a verified certificate from Universal Skill Development Center.</div></details>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="py-14 sm:py-20 bg-[#0a0a0a] text-white relative overflow-hidden">
+        <div class="blob w-40 h-40 bg-rose-600 top-0 left-1/2 opacity-5"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <div class="pill bg-white/10 text-rose-400 mx-auto mb-3 w-fit border border-white/5"><i class="fas fa-paper-plane text-[8px]"></i> Get In Touch</div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold mb-2">Let's <span class="text-rose-500 red-underline">Connect</span></h2>
+                <p class="text-gray-500 text-sm">We'd love to hear from you.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 sm:gap-8">
+                <div class="space-y-3" data-aos="fade-right">
+                    <div class="contact-card"><div class="w-11 h-11 min-w-[44px] bg-green-500/15 rounded-xl flex items-center justify-center text-green-400"><i class="fab fa-whatsapp text-xl"></i></div><div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">WhatsApp Support</p><p class="font-bold text-sm">+91 86690 49971</p><p class="text-[10px] text-green-400 font-semibold"><span class="pulse-dot mr-1 align-middle" style="width:6px;height:6px;"></span> Online Now</p></div></div>
+                    <div class="contact-card"><div class="w-11 h-11 min-w-[44px] bg-rose-500/15 rounded-xl flex items-center justify-center text-rose-400"><i class="far fa-envelope text-lg"></i></div><div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Official Email</p><p class="font-bold text-sm text-gray-300">hello@universalskill.com</p></div></div>
+                    <div class="contact-card"><div class="w-11 h-11 min-w-[44px] bg-blue-500/15 rounded-xl flex items-center justify-center text-blue-400"><i class="fab fa-instagram text-lg"></i></div><div><p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Follow Us</p><p class="font-bold text-sm text-gray-300">@universalskill</p></div></div>
+                    <div class="mt-4 p-4 rounded-2xl bg-gradient-to-br from-rose-500/10 to-pink-500/10 border border-rose-500/10"><p class="text-sm font-bold mb-1">Quick Response Guaranteed</p><p class="text-[11px] text-gray-400 leading-relaxed">We typically reply within 30 minutes during business hours.</p></div>
+                </div>
+                <div class="glass-dark p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/5 shadow-2xl" data-aos="fade-left">
+                    <h3 class="text-lg font-bold mb-5">Send an Enquiry</h3>
+                    <form id="whatsappForm" class="space-y-3">
+                        <input type="text" id="contactName" required placeholder="Full Name" class="form-input-dark">
+                        <input type="email" id="contactEmail" required placeholder="Your Email Address" class="form-input-dark">
+                        <textarea id="contactMessage" rows="3" required placeholder="Tell us your requirements..." class="form-input-dark resize-none"></textarea>
+                        <button type="button" onclick="sendToWhatsappEnquiry()" class="btn-primary w-full py-3.5 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg mt-1"><i class="fab fa-whatsapp text-lg"></i> Chat on WhatsApp</button>
+                        <p class="text-[10px] text-gray-600 text-center">Your message will be sent securely via WhatsApp</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-10 sm:py-12 border-t border-white/5 text-center" style="padding-bottom: 80px;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8iCveFVys_s4MATBxQyvBCJYGCoYqtoGiQ&s" alt="Logo" class="h-10 w-10 mx-auto mb-3 opacity-80 rounded-xl">
+            <div class="text-rose-500 font-extrabold text-xl tracking-tighter mb-1">UNIVERSAL SKILL</div>
+            <div class="text-white/40 text-[9px] font-bold uppercase tracking-[0.3em] mb-5">Development Center</div>
+            <div class="flex justify-center gap-3 mb-6">
+                <a href="https://wa.me/918669049971" class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-green-400 hover:bg-green-500/10 transition"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/universal_skills_?igsh=MTdwZ3Z4OHBxcmUxaQ==" class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 transition"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/universalskillbwd/" class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.youtube.com/@universalskilldevelopmentc4485" class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div class="text-gray-600 text-[10px] tracking-wider">&copy; 2026 Universal Skill Development Center. All Rights Reserved.</div>
+            <div class="mt-2 flex items-center justify-center gap-1.5 text-gray-700 text-[9px]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.557 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-7.076-2.281l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.663-1.305 2.525-3.236 2.525-5.672 0-4.128-2.524-5.851-6.591-7.365z" fill="#6b7280"/></svg>
+                Payments powered by Razorpay
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== STICKY FLOATING FOOTER ===== -->
+    <div id="floating-container">
+        <div class="floating-offer-line">
+            <div class="flex items-center justify-center gap-1.5 text-[11px] sm:text-xs font-bold text-white">
+                <span class="pulse-dot" style="width:6px;height:6px;"></span>
+                Limited-Time Offer: Entire Course for
+                <span class="text-rose-400 font-extrabold">₹1999</span>
+                <span class="line-through text-gray-500">₹4999</span>
+                <span class="bg-rose-500 text-white text-[9px] px-2 py-0.5 rounded-full font-extrabold">SAVE 60%</span>
+            </div>
+        </div>
+        <div class="floating-action-bar">
+            <div class="flex items-center gap-2.5">
+                <div>
+                    <div class="text-[10px] text-gray-400 font-semibold leading-none">Starting from</div>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="text-xl sm:text-2xl font-black text-rose-600 leading-none">₹1999</span>
+                        <span class="text-xs text-gray-400 line-through">₹4,999</span>
+                    </div>
+                </div>
+            </div>
+            <div class="dual-cta" style="gap: 0.5rem;">
+                <a href="https://wa.me/918669049971" target="_blank" class="btn-primary text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2"><i class="fab fa-whatsapp text-base"></i><span class="hidden sm:inline">WhatsApp</span></a>
+                <button onclick="openGateway()" class="btn-pay py-2.5 sm:py-3 px-5 sm:px-7 rounded-xl font-bold text-sm flex items-center gap-2"><i class="fas fa-bolt text-[11px]"></i> Pay Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // ================================================================
+        //  ★★★ RAZORPAY CONFIGURATION ★★★
+        //  
+        //  IMPORTANT: Replace the key below with YOUR Razorpay Key ID
+        //  1. Go to https://dashboard.razorpay.com
+        //  2. Settings → API Keys → Generate Key
+        //  3. Copy "Key ID" (starts with rzp_test_ or rzp_live_)
+        //  4. Paste it below replacing the placeholder
+        //
+        //  For PRODUCTION: You MUST also verify payments server-side.
+        //  Never trust client-side payment verification alone.
+        // ================================================================
+        const RAZORPAY_KEY_ID = 'rzp_test_XXXXXXXXXXXXXXXXXX'; // ← REPLACE THIS
+
+        const CONFIG = {
+            adminWhatsapp: '918669049971',
+            companyName: 'Universal Skill Development Center',
+            companyLogo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8iCveFVys_s4MATBxQyvBCJYGCoYqtoGiQ&s',
+            themeColor: '#e11d48'
+        };
+
+        // --- STATE ---
+        let selectedCourse = { name: 'Makeup Mastery - Basic', amount: 1999, original: 4999 };
+        let userData = { name: '', phone: '', email: '', course: '', amount: 0, payId: '', orderId: '' };
+
+        AOS.init({ duration: 800, once: true, offset: 60, easing: 'ease-out-cubic' });
+
+        // --- MODAL CONTROL ---
+        function openGateway() {
+            document.getElementById('paymentGateway').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            showStep(1);
+            clearErrors();
+            document.getElementById('detailsForm').reset();
+            // Reset course selection to default
+            const firstOption = document.querySelector('.course-option');
+            document.querySelectorAll('.course-option').forEach(o => o.classList.remove('selected'));
+            firstOption.classList.add('selected');
+            selectedCourse = { name: 'Makeup Mastery - Basic', amount: 1999, original: 4999 };
+            updatePayButton();
+        }
+
+        function closeGateway() {
+            document.getElementById('paymentGateway').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showStep(stepNum) {
+            document.querySelectorAll('.modal-step').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step${stepNum}`).classList.add('active');
+        }
+
+        // --- COURSE SELECTION ---
+        function selectCourse(element, name, amount, original) {
+            document.querySelectorAll('.course-option').forEach(o => o.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedCourse = { name, amount, original };
+            updatePayButton();
+        }
+
+        function updatePayButton() {
+            document.getElementById('payBtnAmount').textContent = '₹' + selectedCourse.amount.toLocaleString('en-IN');
+        }
+
+        // --- INLINE VALIDATION ---
+        function clearErrors() {
+            document.querySelectorAll('.field-error').forEach(el => el.classList.remove('visible'));
+            document.querySelectorAll('.gateway-input').forEach(el => el.classList.remove('error'));
+        }
+
+        function showFieldError(inputId, errorId) {
+            document.getElementById(inputId).classList.add('error');
+            document.getElementById(errorId).classList.add('visible');
+        }
+
+        // Live validation on input
+        document.addEventListener('DOMContentLoaded', () => {
+            const nameInput = document.getElementById('userName');
+            const emailInput = document.getElementById('userEmail');
+            const phoneInput = document.getElementById('userPhone');
+
+            nameInput.addEventListener('input', () => {
+                nameInput.classList.remove('error');
+                document.getElementById('nameError').classList.remove('visible');
+            });
+            emailInput.addEventListener('input', () => {
+                emailInput.classList.remove('error');
+                document.getElementById('emailError').classList.remove('visible');
+            });
+            phoneInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                phoneInput.classList.remove('error');
+                document.getElementById('phoneError').classList.remove('visible');
+            });
+        });
+
+        // --- STEP 1: VALIDATE & INITIATE RAZORPAY ---
+        function initiatePayment() {
+            clearErrors();
+            const name = document.getElementById('userName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+
+            let isValid = true;
+
+            if (name.length < 2) {
+                showFieldError('userName', 'nameError');
+                isValid = false;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showFieldError('userEmail', 'emailError');
+                isValid = false;
+            }
+            if (phone.length !== 10 || isNaN(phone)) {
+                showFieldError('userPhone', 'phoneError');
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            userData = {
+                name, email, phone: '91' + phone,
+                course: selectedCourse.name,
+                amount: selectedCourse.amount,
+                payId: '', orderId: ''
+            };
+
+            // Check if Razorpay is loaded
+            if (typeof Razorpay === 'undefined') {
+                alert('Payment gateway is loading. Please wait a moment and try again.');
+                return;
+            }
+
+            // Check if key is configured
+            if (RAZORPAY_KEY_ID.includes('XXXXXXXX')) {
+                alert('⚠️ Payment gateway is not configured yet.\n\nPlease replace the RAZORPAY_KEY_ID in the code with your actual Razorpay API Key.\n\nGet it from: dashboard.razorpay.com → Settings → API Keys');
+                return;
+            }
+
+            // Show loading
+            showStep(2);
+
+            // Open Razorpay after a small delay for UX
+            setTimeout(() => {
+                openRazorpayCheckout();
+            }, 800);
+        }
+
+        // --- RAZORPAY CHECKOUT ---
+        function openRazorpayCheckout() {
+            const options = {
+                key: RAZORPAY_KEY_ID,
+                amount: userData.amount * 100, // Razorpay takes amount in paise
+                currency: 'INR',
+                name: CONFIG.companyName,
+                description: userData.course,
+                image: CONFIG.companyLogo,
+                order_id: '', // Leave empty for test mode; in production, generate from server
+                
+                handler: function (response) {
+                    // PAYMENT SUCCESS
+                    userData.payId = response.razorpay_payment_id;
+                    userData.orderId = response.razorpay_order_id || 'N/A';
+                    generateReceipt();
+                    showStep(3);
+                },
+
+                prefill: {
+                    name: userData.name,
+                    email: userData.email,
+                    contact: userData.phone
+                },
+
+                notes: {
+                    course: userData.course,
+                    source: 'Universal Skill Website'
+                },
+
+                theme: {
+                    color: CONFIG.themeColor
+                },
+
+                modal: {
+                    ondismiss: function () {
+                        // User closed Razorpay modal without paying
+                        showStep(1);
+                    }
+                }
+            };
+
+            try {
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    // PAYMENT FAILED
+                    document.getElementById('failureReason').textContent = 
+                        response.error.description || 'The transaction could not be completed.';
+                    showStep(4);
+                });
+                rzp.open();
+            } catch (err) {
+                console.error('Razorpay Error:', err);
+                document.getElementById('failureReason').textContent = 
+                    'Unable to initialize payment gateway. Please try again or contact support.';
+                showStep(4);
+            }
+        }
+
+        // --- RETRY PAYMENT ---
+        function retryPayment() {
+            showStep(1);
+        }
+
+        // --- RECEIPT ---
+        function generateReceipt() {
+            const now = new Date();
+            const date = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            const time = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            const receiptId = 'USK' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + Math.floor(Math.random() * 10000);
+
+            document.getElementById('receiptId').textContent = receiptId;
+            document.getElementById('receiptPayId').textContent = userData.payId;
+            document.getElementById('receiptDate').textContent = date + ' at ' + time;
+            document.getElementById('receiptName').textContent = userData.name;
+            document.getElementById('receiptPhone').textContent = userData.phone;
+            document.getElementById('receiptEmail').textContent = userData.email;
+            document.getElementById('receiptCourse').textContent = userData.course;
+            document.getElementById('receiptAmount').textContent = '₹' + userData.amount.toLocaleString('en-IN');
+            
+            // Determine payment method from pay ID prefix (approximate)
+            const methodMap = {
+                'pay': 'Card / UPI',
+            };
+            document.getElementById('receiptMethod').textContent = 'Razorpay (Secure)';
+        }
+
+        function sendToWhatsapp() {
+            const date = new Date().toLocaleString('en-IN');
+            const message = `✅ *NEW PAYMENT — RAZORPAY CONFIRMED*\n\n` +
+                            `📋 *Receipt:* ${document.getElementById('receiptId').textContent}\n` +
+                            `💳 *Razorpay Pay ID:* ${userData.payId}\n` +
+                            `👤 *Name:* ${userData.name}\n` +
+                            `📱 *Mobile:* ${userData.phone}\n` +
+                            `📧 *Email:* ${userData.email}\n` +
+                            `📚 *Course:* ${userData.course}\n` +
+                            `💰 *Amount:* ₹${userData.amount.toLocaleString('en-IN')}\n` +
+                            `📅 *Date:* ${date}\n\n` +
+                            `Please verify and activate the course access.`;
+            window.open(`https://wa.me/${CONFIG.adminWhatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // --- SITE FUNCTIONALITY ---
+        const menuBtn = document.getElementById('menuBtn');
+        const menuClose = document.getElementById('menuClose');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+        menuClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        function closeMobileMenu() { mobileMenu.classList.remove('open'); }
+        mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMobileMenu(); });
+        mobileLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+
+        window.addEventListener('scroll', () => {
+            const footer = document.getElementById('floating-container');
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const bodyHeight = document.body.offsetHeight;
+            if (scrollY > 400) { footer.classList.add('show'); } else { footer.classList.remove('show'); }
+            if ((scrollY + windowHeight) >= (bodyHeight - 160)) { footer.classList.add('hide-at-bottom'); } else { footer.classList.remove('hide-at-bottom'); }
+        }, { passive: true });
+
+        function toggleCoursePoint(element) {
+            const isOpen = element.classList.contains('open');
+            document.querySelectorAll('.course-point').forEach(cp => cp.classList.remove('open'));
+            if (!isOpen) element.classList.add('open');
+        }
+
+        function toggleSupport(element) {
+            const isOpen = element.classList.contains('active');
+            document.querySelectorAll('.support-card').forEach(card => card.classList.remove('active'));
+            if (!isOpen) element.classList.add('active');
+        }
+
+        function sendToWhatsappEnquiry() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+            if (!name || !email || !message) { alert("Please fill all fields"); return; }
+            const encodedText = `Hello Universal Skill Center, %0A%0A*Name:* ${encodeURIComponent(name)}%0A*Email:* ${encodeURIComponent(email)}%0A*Enquiry:* ${encodeURIComponent(message)}`;
+            window.open(`https://wa.me/${CONFIG.adminWhatsapp}?text=${encodedText}`, '_blank').focus();
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) { const top = target.getBoundingClientRect().top + window.scrollY - 90; window.scrollTo({ top, behavior: 'smooth' }); }
+            });
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeGateway();
+        });
+    </script>
+</body>
+</html>
